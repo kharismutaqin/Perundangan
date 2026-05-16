@@ -24,6 +24,10 @@ export const kontenUndangan = {
     alamat: "Jl. Gatot Subroto No. 12, Jakarta Selatan",
     mapsUrl: "https://maps.google.com/?q=Gedung+Graha+Santika+Jakarta",
   },
+  fotoMempelai: {
+    pria: "https://picsum.photos/300/300?random=11",
+    wanita: "https://picsum.photos/300/300?random=12",
+  },
   galeri: [
     "https://picsum.photos/300/400?random=1",
     "https://picsum.photos/300/400?random=2",

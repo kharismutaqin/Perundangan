@@ -198,10 +198,10 @@ Ucapan: ${data.wishes || "-"}`;
                   {/* Groom */}
                   <div className="flex flex-col items-center text-center">
                     <div className="w-48 h-48 md:w-56 md:h-56 rounded-full p-2 border-2 border-primary/20 mb-6 shadow-xl">
-                      <div className="w-full h-full rounded-full bg-gradient-to-tr from-stone-200 to-stone-100 flex items-center justify-center relative overflow-hidden">
-                        <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-stone-400 to-transparent mix-blend-multiply"></div>
-                        <span className="font-serif text-4xl text-stone-400">R</span>
-                      </div>
+                      <img
+                        src={kontenUndangan.fotoMempelai.pria}
+                        className="w-full h-full object-cover rounded-full"
+                      />
                     </div>
                     <h3 className="font-serif text-2xl font-medium mb-2 text-primary">{kontenUndangan.namaMempelai.pria}</h3>
                     <p className="text-muted-foreground text-sm leading-relaxed">
@@ -221,10 +221,10 @@ Ucapan: ${data.wishes || "-"}`;
                   {/* Bride */}
                   <div className="flex flex-col items-center text-center">
                     <div className="w-48 h-48 md:w-56 md:h-56 rounded-full p-2 border-2 border-primary/20 mb-6 shadow-xl">
-                      <div className="w-full h-full rounded-full bg-gradient-to-bl from-rose-100 to-stone-100 flex items-center justify-center relative overflow-hidden">
-                        <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-rose-400 to-transparent mix-blend-multiply"></div>
-                        <span className="font-serif text-4xl text-rose-300">J</span>
-                      </div>
+                      <img
+                        src={kontenUndangan.fotoMempelai.wanita}
+                        className="w-full h-full object-cover rounded-full"
+                      />
                     </div>
                     <h3 className="font-serif text-2xl font-medium mb-2 text-primary">{kontenUndangan.namaMempelai.wanita}</h3>
                     <p className="text-muted-foreground text-sm leading-relaxed">
