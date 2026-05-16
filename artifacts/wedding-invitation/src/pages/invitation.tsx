@@ -335,22 +335,18 @@ Ucapan: ${data.wishes || "-"}`;
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-                  {[
-                    "from-rose-100 to-stone-100",
-                    "from-amber-100 to-stone-100",
-                    "from-stone-200 to-stone-100",
-                    "from-stone-100 to-amber-50",
-                    "from-rose-50 to-stone-200",
-                    "from-amber-50 to-rose-100",
-                  ].map((bg, i) => (
+                  {kontenUndangan.galeri.map((url, i) => (
                     <motion.div
                       key={i}
                       whileHover={{ scale: 1.02 }}
-                      className={`relative aspect-[3/4] rounded-2xl overflow-hidden shadow-md bg-gradient-to-br ${bg}`}
+                      className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-md"
                     >
+                      <img
+                        src={url}
+                        alt={`Prewedding ${i + 1}`}
+                        className="w-full h-full object-cover"
+                      />
                       <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors duration-300"></div>
-                      {/* Decorative pattern for placeholder */}
-                      <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-stone-600 to-transparent mix-blend-overlay"></div>
                     </motion.div>
                   ))}
                 </div>
