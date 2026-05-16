@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,7 +8,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { MapPin, Calendar, Clock, Heart, Send } from "lucide-react";
+import { MapPin, Calendar, Clock, Heart, Send, Music, Music2, Copy, Check } from "lucide-react";
 import { kontenUndangan } from "../../KontenEditor";
 
 const Ornament = ({ className }: { className?: string }) => (
@@ -82,6 +82,9 @@ type RsvpFormValues = z.infer<typeof rsvpSchema>;
 export default function Invitation() {
   const [guestName, setGuestName] = useState<string>("Tamu Undangan");
   const [isOpened, setIsOpened] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
+  const [copied, setCopied] = useState(false);
+  const audioRef = useRef<HTMLAudioElement>(null);
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -136,6 +139,23 @@ export default function Invitation() {
     return () => clearInterval(timer);
   }, []);
 
+  const toggleMute = () => {
+    if (!audioRef.current) return;
+    const next = !isMuted;
+    audioRef.current.muted = next;
+    if (!next) {
+      audioRef.current.play().catch(() => {});
+    }
+    setIsMuted(next);
+  };
+
+  const copyAccNumber = () => {
+    navigator.clipboard.writeText(kontenUndangan.gift.accNumber).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
   const onOpen = () => {
     setIsOpened(true);
     setTimeout(() => {
@@ -155,6 +175,18 @@ Ucapan: ${data.wishes || "-"}`;
 
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-primary selection:text-primary-foreground font-sans overflow-x-hidden">
+      {/* Background audio */}
+      <audio ref={audioRef} src={kontenUndangan.audioUrl} loop muted />
+
+      {/* Floating music toggle */}
+      <button
+        onClick={toggleMute}
+        aria-label={isMuted ? "Unmute music" : "Mute music"}
+        className={`fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-primary text-primary-foreground shadow-lg flex items-center justify-center transition-opacity duration-300 ${isMuted ? "opacity-40" : "opacity-100"}`}
+      >
+        {isMuted ? <Music2 className="w-5 h-5" /> : <Music className="w-5 h-5" />}
+      </button>
+
       {/* 1. Cover / Hero Section */}
       <section className="relative min-h-[100dvh] flex flex-col items-center justify-center p-6 text-center border-b-8 border-primary/10">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -347,6 +379,15 @@ Ucapan: ${data.wishes || "-"}`;
                       </div>
                     ))}
                   </div>
+                  <div className="mt-8">
+                    <Button
+                      variant="outline"
+                      className="border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-full px-6"
+                      onClick={() => window.open(kontenUndangan.calendarLink, "_blank")}
+                    >
+                      <Calendar className="w-4 h-4 mr-2" /> Simpan Tanggal
+                    </Button>
+                  </div>
                 </div>
               </motion.div>
             </section>
@@ -493,7 +534,56 @@ Ucapan: ${data.wishes || "-"}`;
               </motion.div>
             </section>
 
-            {/* 6. Footer */}
+            {/* 6. Digital Gift */}
+            <section className="py-24 px-6 bg-card/50 border-t border-primary/10">
+              <motion.div
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-100px" }}
+                variants={sectionVariants}
+                className="max-w-md mx-auto text-center"
+              >
+                <Ornament className="mx-auto text-primary mb-8" />
+                <h2 className="font-serif text-3xl md:text-4xl text-primary mb-4">
+                  Amplop Digital
+                </h2>
+                <p className="text-muted-foreground mb-10">
+                  Bagi yang ingin memberikan tanda kasih, Anda dapat mengirimkan melalui rekening berikut.
+                </p>
+                <div className="bg-background rounded-3xl border border-primary/10 shadow-lg p-8 text-left space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-muted-foreground">Bank</span>
+                    <span className="font-medium text-foreground">{kontenUndangan.gift.bankName}</span>
+                  </div>
+                  <div className="h-[1px] bg-primary/10" />
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-muted-foreground">Atas Nama</span>
+                    <span className="font-medium text-foreground">{kontenUndangan.gift.accName}</span>
+                  </div>
+                  <div className="h-[1px] bg-primary/10" />
+                  <div className="flex justify-between items-center gap-4">
+                    <span className="text-sm text-muted-foreground">No. Rekening</span>
+                    <div className="flex items-center gap-2">
+                      <span className="font-serif text-lg font-medium text-primary tracking-widest">
+                        {kontenUndangan.gift.accNumber}
+                      </span>
+                      <button
+                        onClick={copyAccNumber}
+                        aria-label="Salin nomor rekening"
+                        className="p-1.5 rounded-full hover:bg-primary/10 text-primary transition-colors"
+                      >
+                        {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                {copied && (
+                  <p className="mt-4 text-sm text-primary">Nomor rekening telah disalin!</p>
+                )}
+              </motion.div>
+            </section>
+
+            {/* 7. Footer */}
             <footer className="py-16 text-center bg-primary text-primary-foreground">
               <Ornament className="mx-auto mb-8 text-primary-foreground/50" />
               <h2 className="font-serif text-3xl mb-2">{kontenUndangan.footer.judul}</h2>

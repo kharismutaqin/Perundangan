@@ -39,6 +39,14 @@ export const kontenUndangan = {
   rsvp: {
     nomorWhatsapp: "6283831726687",
   },
+  audioUrl: "/music/wedding-song.mp3",
+  gift: {
+    bankName: "BCA",
+    accNumber: "1234567890",
+    accName: "Kharis Mutaqin",
+  },
+  calendarLink:
+    "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Pernikahan+Kharis+dan+Kamila&dates=20260614T020000Z/20260614T050000Z&details=Mohon+kehadiran+dan+doa+restunya.&location=Gedung+Graha+Santika",
   footer: {
     judul: "Kharis & Kamila",
     tanggal: "14 . 06 . 2025",
