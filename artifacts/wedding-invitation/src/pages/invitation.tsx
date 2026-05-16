@@ -28,6 +28,39 @@ const Ornament = ({ className }: { className?: string }) => (
   </svg>
 );
 
+const parseWeddingDate = (dateLabel: string) => {
+  const match = dateLabel.match(/(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})/);
+
+  if (!match) {
+    return new Date("2025-06-14T08:00:00").getTime();
+  }
+
+  const [, dayText, monthText, yearText] = match;
+  const day = Number(dayText);
+  const year = Number(yearText);
+  const monthMap: Record<string, number> = {
+    januari: 0,
+    februari: 1,
+    maret: 2,
+    april: 3,
+    mei: 4,
+    juni: 5,
+    juli: 6,
+    agustus: 7,
+    september: 8,
+    oktober: 9,
+    november: 10,
+    desember: 11,
+  };
+  const month = monthMap[monthText.toLowerCase()];
+
+  if (month === undefined || Number.isNaN(day) || Number.isNaN(year)) {
+    return new Date("2025-06-14T08:00:00").getTime();
+  }
+
+  return new Date(year, month, day, 8, 0, 0).getTime();
+};
+
 const sectionVariants = {
   hidden: { opacity: 0, y: 30 },
   visible: {
@@ -81,7 +114,7 @@ export default function Invitation() {
   }, [setValue]);
 
   useEffect(() => {
-    const weddingDate = new Date("2025-06-14T08:00:00").getTime();
+    const weddingDate = parseWeddingDate(kontenUndangan.acara.akad.tanggal);
 
     const timer = setInterval(() => {
       const now = new Date().getTime();
