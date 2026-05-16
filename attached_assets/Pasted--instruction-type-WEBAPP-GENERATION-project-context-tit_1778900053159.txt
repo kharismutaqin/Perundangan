@@ -1,0 +1,55 @@
+{
+  "instruction_type": "WEBAPP_GENERATION",
+  "project_context": {
+    "title": "Sistem Undangan Digital Statis",
+    "architecture": "Jamstack (Static Frontend with Client-Side Logic)",
+    "tech_stack": {
+      "framework": "Next.js (App Router)",
+      "styling": "Tailwind CSS",
+      "interactivity": "Vanilla JavaScript / React Hooks"
+    }
+  },
+  "ui_design_specification": {
+    "theme": "Romantic Modern Elegant",
+    "color_palette": {
+      "background": "bg-stone-50 (Cream/Off-white)",
+      "primary_text": "text-stone-800",
+      "accent_gold": "text-amber-700 / bg-amber-700",
+      "muted": "text-stone-500"
+    },
+    "typography": "Serif font for headings (romantic feel), Sans-serif for body text (readability)."
+  },
+  "required_sections_in_page": [
+    {
+      "id": "cover_hero",
+      "name": "Cover / Hero Section",
+      "elements": ["The Wedding Of Title", "Groom & Bride Names (Romeo & Juliet)", "Guest Name Card Display", "Interactive 'Buka Undangan' Button"]
+    },
+    {
+      "id": "mempelai_profile",
+      "name": "Profil Mempelai",
+      "elements": ["Detailed profiles of Groom and Bride", "Parents' names", "Elegant layout with placeholders for photos"]
+    },
+    {
+      "id": "event_details",
+      "name": "Detail Acara & Lokasi",
+      "elements": ["Akad Nikah date & time", "Resepsi date & time", "Location address text", "Action button linking to Google Maps"]
+    },
+    {
+      "id": "media_gallery",
+      "name": "Galeri Foto",
+      "elements": ["Responsive grid layout for pre-wedding photos with hover effects"]
+    },
+    {
+      "id": "rsvp_section",
+      "name": "RSVP Form",
+      "elements": ["Input for Name", "Attendance confirmation (Radio/Select)", "Number of guests (Pax)", "Greeting text area", "Submit button that opens WhatsApp API with pre-filled dynamic text message"]
+    }
+  ],
+  "core_feature_logic": {
+    "feature_name": "Dynamic Guest Name via URL Query Parameter",
+    "mechanism": "Implement client-side JavaScript using Next.js 'useSearchParams' or standard Web API to read the '?to=' parameter from the URL.",
+    "expected_behavior": "If URL is 'domain.com/?to=Budi+Nugroho', the Cover Section must display 'Budi Nugroho'. If the parameter is missing, fallback to 'Tamu Undangan'."
+  },
+  "execution_request": "Please generate or modify the main page code (typically inside `src/app/page.tsx` or `page.tsx`) to implement the full UI sections, Tailwind styling, and the core URL query parameter logic described above. Ensure the code is clean, fully responsive for mobile devices, and error-free."
+}
