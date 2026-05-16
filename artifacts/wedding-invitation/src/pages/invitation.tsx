@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,6 +9,7 @@ import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MapPin, Calendar, Clock, Heart, Send } from "lucide-react";
+import { kontenUndangan } from "../../KontenEditor";
 
 const Ornament = ({ className }: { className?: string }) => (
   <svg
@@ -26,6 +27,15 @@ const Ornament = ({ className }: { className?: string }) => (
     />
   </svg>
 );
+
+const sectionVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, ease: "easeOut" as const },
+  },
+};
 
 const rsvpSchema = z.object({
   name: z.string().min(1, "Nama wajib diisi"),
@@ -101,18 +111,13 @@ export default function Invitation() {
   };
 
   const onSubmitRSVP = (data: RsvpFormValues) => {
-    const message = `Halo, saya ${data.name} ingin konfirmasi kehadiran untuk pernikahan Romeo & Juliet.
+    const message = `Halo, saya ${data.name} ingin konfirmasi kehadiran untuk pernikahan ${kontenUndangan.footer.judul}.
 Kehadiran: ${data.attendance}
 Jumlah Tamu: ${data.guests} orang
 Ucapan: ${data.wishes || "-"}`;
 
     const encodedMessage = encodeURIComponent(message);
-    window.open(`https://wa.me/6281234567890?text=${encodedMessage}`, "_blank");
-  };
-
-  const sectionVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } },
+    window.open(`https://wa.me/${kontenUndangan.rsvp.nomorWhatsapp}?text=${encodedMessage}`, "_blank");
   };
 
   return (
@@ -134,9 +139,9 @@ Ucapan: ${data.wishes || "-"}`;
             The Wedding Of
           </p>
           <h1 className="font-serif text-5xl md:text-6xl text-primary mb-6 leading-tight">
-            Romeo <br />
+            {kontenUndangan.namaMempelai.pria.split(" ")[0]} <br />
             <span className="text-3xl italic text-primary/70">&amp;</span> <br />
-            Juliet
+            {kontenUndangan.namaMempelai.wanita.split(" ")[0]}
           </h1>
           
           <div className="my-8 h-[1px] w-24 bg-primary/20 mx-auto"></div>
@@ -198,10 +203,10 @@ Ucapan: ${data.wishes || "-"}`;
                         <span className="font-serif text-4xl text-stone-400">R</span>
                       </div>
                     </div>
-                    <h3 className="font-serif text-2xl font-medium mb-2 text-primary">Romeo Wijaya</h3>
+                    <h3 className="font-serif text-2xl font-medium mb-2 text-primary">{kontenUndangan.namaMempelai.pria}</h3>
                     <p className="text-muted-foreground text-sm leading-relaxed">
                       Putra dari<br />
-                      Bapak Antonius Wijaya &amp; Ibu Maria Wijaya
+                      {kontenUndangan.orangTua.pria}
                     </p>
                   </div>
 
@@ -221,10 +226,10 @@ Ucapan: ${data.wishes || "-"}`;
                         <span className="font-serif text-4xl text-rose-300">J</span>
                       </div>
                     </div>
-                    <h3 className="font-serif text-2xl font-medium mb-2 text-primary">Juliet Kusuma</h3>
+                    <h3 className="font-serif text-2xl font-medium mb-2 text-primary">{kontenUndangan.namaMempelai.wanita}</h3>
                     <p className="text-muted-foreground text-sm leading-relaxed">
                       Putri dari<br />
-                      Bapak Hendro Kusuma &amp; Ibu Sri Kusuma
+                      {kontenUndangan.orangTua.wanita}
                     </p>
                   </div>
                 </div>
@@ -255,10 +260,10 @@ Ucapan: ${data.wishes || "-"}`;
                     <h3 className="font-serif text-2xl mb-4 text-foreground">Akad Nikah</h3>
                     <div className="space-y-3 text-muted-foreground">
                       <p className="flex items-center justify-center gap-2">
-                        <Calendar className="w-4 h-4 text-primary" /> Sabtu, 14 Juni 2025
+                        <Calendar className="w-4 h-4 text-primary" /> {kontenUndangan.acara.akad.tanggal}
                       </p>
                       <p className="flex items-center justify-center gap-2">
-                        <Clock className="w-4 h-4 text-primary" /> Pukul 08.00 – 10.00 WIB
+                        <Clock className="w-4 h-4 text-primary" /> {kontenUndangan.acara.akad.waktu}
                       </p>
                     </div>
                   </div>
@@ -270,10 +275,10 @@ Ucapan: ${data.wishes || "-"}`;
                     <h3 className="font-serif text-2xl mb-4 text-foreground">Resepsi</h3>
                     <div className="space-y-3 text-muted-foreground">
                       <p className="flex items-center justify-center gap-2">
-                        <Calendar className="w-4 h-4 text-primary" /> Sabtu, 14 Juni 2025
+                        <Calendar className="w-4 h-4 text-primary" /> {kontenUndangan.acara.resepsi.tanggal}
                       </p>
                       <p className="flex items-center justify-center gap-2">
-                        <Clock className="w-4 h-4 text-primary" /> Pukul 11.00 – 14.00 WIB
+                        <Clock className="w-4 h-4 text-primary" /> {kontenUndangan.acara.resepsi.waktu}
                       </p>
                     </div>
                   </div>
@@ -281,14 +286,14 @@ Ucapan: ${data.wishes || "-"}`;
 
                 <div className="text-center bg-primary/5 rounded-3xl p-8 border border-primary/10">
                   <MapPin className="w-8 h-8 text-primary mx-auto mb-4" />
-                  <h4 className="font-serif text-xl mb-2 font-medium">Gedung Graha Santika</h4>
+                  <h4 className="font-serif text-xl mb-2 font-medium">{kontenUndangan.lokasi.nama}</h4>
                   <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-                    Jl. Gatot Subroto No. 12, Jakarta Selatan
+                    {kontenUndangan.lokasi.alamat}
                   </p>
                   <Button
                     variant="outline"
                     className="border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-full px-6"
-                    onClick={() => window.open('https://maps.google.com/?q=Gedung+Graha+Santika+Jakarta', '_blank')}
+                    onClick={() => window.open(kontenUndangan.lokasi.mapsUrl, "_blank")}
                   >
                     <MapPin className="w-4 h-4 mr-2" /> Buka Google Maps
                   </Button>
@@ -462,8 +467,8 @@ Ucapan: ${data.wishes || "-"}`;
             {/* 6. Footer */}
             <footer className="py-16 text-center bg-primary text-primary-foreground">
               <Ornament className="mx-auto mb-8 text-primary-foreground/50" />
-              <h2 className="font-serif text-3xl mb-2">Romeo &amp; Juliet</h2>
-              <p className="tracking-widest text-sm mb-6 text-primary-foreground/80">14 . 06 . 2025</p>
+              <h2 className="font-serif text-3xl mb-2">{kontenUndangan.footer.judul}</h2>
+              <p className="tracking-widest text-sm mb-6 text-primary-foreground/80">{kontenUndangan.footer.tanggal}</p>
               <p className="text-sm text-primary-foreground/60 italic font-serif">
                 Terima kasih atas doa dan kehadiran Anda.
               </p>
