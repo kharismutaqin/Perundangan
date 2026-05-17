@@ -161,11 +161,6 @@ export default function Invitation() {
     setTimeout(() => {
       document.getElementById("mempelai")?.scrollIntoView({ behavior: "smooth" });
     }, 100);
-    if (audioRef.current) {
-      audioRef.current.muted = false;
-      audioRef.current.play().catch(() => {});
-      setIsMuted(false);
-    }
   };
 
   const onSubmitRSVP = (data: RsvpFormValues) => {
@@ -181,7 +176,7 @@ Ucapan: ${data.wishes || "-"}`;
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-primary selection:text-primary-foreground font-sans overflow-x-hidden">
       {/* Background audio */}
-      <audio ref={audioRef} src={kontenUndangan.audioUrl} loop autoPlay muted playsInline />
+      <audio ref={audioRef} src={kontenUndangan.audioUrl} loop muted />
 
       {/* Floating music toggle */}
       <button
