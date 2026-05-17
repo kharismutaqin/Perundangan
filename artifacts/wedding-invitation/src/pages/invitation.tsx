@@ -192,6 +192,12 @@ export default function Invitation() {
 
   const onOpen = () => {
     setIsOpened(true);
+    // --- KODE TAMBAHAN UNTUK WARMING-UP AUDIO ---
+    if (audioRef.current) {
+      audioRef.current.muted = true; // Tetap senyap di awal sesuai maumu agar tidak kaget
+      audioRef.current.play().catch((err) => console.log("Audio warm-up:", err));
+    }
+    // --------------------------------------------
     setTimeout(() => {
       document.getElementById("mempelai")?.scrollIntoView({ behavior: "smooth" });
     }, 100);
@@ -210,7 +216,7 @@ Ucapan: ${data.wishes || "-"}`;
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-primary selection:text-primary-foreground font-sans overflow-x-hidden">
       {/* Background audio */}
-      <audio ref={audioRef} src={kontenUndangan.audioUrl} loop muted />
+      <audio ref={audioRef} src={kontenUndangan.audioUrl} loop playsInline />
 
       {/* Floating Action Buttons */}
       <div className="fixed bottom-24 right-4 z-50 flex flex-col gap-3">
