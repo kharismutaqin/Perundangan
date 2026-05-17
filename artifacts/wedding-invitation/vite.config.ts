@@ -12,6 +12,7 @@ const isVercel = Boolean(process.env.VERCEL);
 
 export default defineConfig({
   base: basePath,
+  publicDir: "public",
   plugins: [
     react(),
     tailwindcss(),
