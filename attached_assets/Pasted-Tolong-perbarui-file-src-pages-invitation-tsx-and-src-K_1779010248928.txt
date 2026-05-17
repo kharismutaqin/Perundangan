@@ -1,0 +1,33 @@
+Tolong perbarui file "src/pages/invitation.tsx" and "src/KontenEditor.ts" untuk menerapkan seluruh fitur berikut sekaligus. Pastikan kodenya rapi dan tidak ada yang crash.
+
+1. UPDATE DATA (src/KontenEditor.ts):
+   - Pastikan objek "kontenUndangan" memiliki properti:
+     audioUrl: "/music/wedding-song.mp3"
+     gift: { bankName: "BCA", accNumber: "1234567890", accName: "Kharis Mutaqin" }
+   - Hapus properti "calendarLink" lama jika masih ada.
+
+2. KALENDER OTOMATIS (src/pages/invitation.tsx):
+   - Buat fungsi dinamis `generateCalendarLink()` di dalam komponen untuk merakit URL Google Calendar otomatis berdasarkan data dari KontenEditor.ts. Set tanggal acara Resepsi: 14 Juni 2026 (Jam 11:00 - 14:00 WIB). Hubungkan ke href tombol "Simpan Tanggal".
+
+3. SEKSI KADO DIGITAL (src/pages/invitation.tsx):
+   - Buat seksi "Digital Gift" sebelum footer yang menampilkan info rekening dari kontenUndangan.gift beserta tombol "Salin Nomor Rekening". Berikan ID html id="gift-section" pada seksi ini.
+
+4. FIX IMPORT & ICON LAB (src/pages/invitation.tsx):
+   - Pastikan import lucide-react menggunakan { Icon } untuk mengambil { gemRing } dari '@lucide/lab'.
+   - Pastikan di kartu Akad Nikah menggunakan komponen: <Icon iconNode={gemRing} className="w-5 h-5" />
+
+5. FLOATING ACTION BUTTONS (Grup Tombol Melayang):
+   - Buat grup tombol melayang (Floating) di pojok bawah layar yang berisi DUA tombol:
+     a. Tombol Musik: Mengontrol play/pause atau mute/unmute tag <audio src={kontenUndangan.audioUrl} loop autoPlay />. Gunakan ikon 'Music' jika menyala, dan 'VolumeX' jika mati.
+     b. Tombol Auto-Scroll: Menggunakan ikon 'Play' (untuk mulai jalan otomatis ke bawah perlahan) dan 'Pause' (untuk menghentikan auto-scroll).
+
+6. BOTTOM NAVBAR STICKY MOUNTED (Tanpa Label Teks):
+   - Buat sebuah Bottom Navigation Bar yang posisinya fixed/sticky di tengah-bawah layar (hanya muncul setelah user membuka undangan).
+   - Desain navbar wajib bersih TANPA LABEL TEKS (hanya ikon saja). Ikuti visual gambar referensi: bar background hitam melengkung kapsul (rounded-full) dengan lingkaran-lingkaran putih di dalamnya yang berisi ikon berikut dari 'lucide-react':
+     1. Home (Scroll ke paling atas / Hero)
+     2. Users (Scroll ke Seksi Mempelai)
+     3. CalendarHeart (Scroll ke Seksi Acara/Kalender)
+     4. Images (Scroll ke Seksi Galeri)
+     5. NotebookPen (Scroll ke Seksi RSVP/Ucapan)
+     6. CreditCard (Scroll ke Seksi Kado Digital / #gift-section)
+   - Pastikan setiap seksi utama di halaman undangan sudah dipasangi ID HTML yang sesuai agar fungsi scroll-to-view dari tombol navbar ini bekerja dengan lancar.

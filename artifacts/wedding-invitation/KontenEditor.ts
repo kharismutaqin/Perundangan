@@ -11,7 +11,7 @@ export const kontenUndangan = {
   },
   acara: {
     akad: {
-      tanggal: "Sabtu, 14 Juni 2026",
+      tanggal: "Sabtu, 14 Juni 2028",
       waktu: "Pukul 08.00 – 10.00 WIB",
     },
     resepsi: {
@@ -45,8 +45,6 @@ export const kontenUndangan = {
     accNumber: "1234567890",
     accName: "Kharis Mutaqin",
   },
-  calendarLink:
-    "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Pernikahan+Kharis+dan+Kamila&dates=20260614T020000Z/20260614T050000Z&details=Mohon+kehadiran+dan+doa+restunya.&location=Gedung+Graha+Santika",
   footer: {
     judul: "Kharis & Kamila",
     tanggal: "14 . 06 . 2025",

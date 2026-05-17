@@ -8,7 +8,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { MapPin, Calendar, Clock, Heart, Send, Music, Music2, Copy, Check } from "lucide-react";
+import { MapPin, Calendar, Clock, Heart, Send, Music, VolumeX, Copy, Check, Play, Pause, Home, Users, CalendarHeart, Images, NotebookPen, CreditCard, Icon } from "lucide-react";
+import { gemRing } from '@lucide/lab';
 import { kontenUndangan } from "../../KontenEditor";
 
 const Ornament = ({ className }: { className?: string }) => (
@@ -84,7 +85,9 @@ export default function Invitation() {
   const [isOpened, setIsOpened] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [copied, setCopied] = useState(false);
+  const [isAutoScrolling, setIsAutoScrolling] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const autoScrollRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -139,6 +142,37 @@ export default function Invitation() {
     return () => clearInterval(timer);
   }, []);
 
+  const generateCalendarLink = () => {
+    const match = kontenUndangan.acara.resepsi.tanggal.match(/(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})/);
+    if (!match) return "#";
+    const [, dayText, monthText, yearText] = match;
+    const day = Number(dayText).toString().padStart(2, "0");
+    const year = yearText;
+    const monthMap: Record<string, string> = {
+      januari: "01", februari: "02", maret: "03", april: "04", mei: "05", juni: "06",
+      juli: "07", agustus: "08", september: "09", oktober: "10", november: "11", desember: "12",
+    };
+    const month = monthMap[monthText.toLowerCase()] ?? "01";
+    const startUTC = `${year}${month}${day}T040000Z`;
+    const endUTC   = `${year}${month}${day}T070000Z`;
+    const title    = encodeURIComponent(`Pernikahan ${kontenUndangan.footer.judul}`);
+    const location = encodeURIComponent(kontenUndangan.lokasi.nama);
+    return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startUTC}/${endUTC}&details=Mohon+kehadiran+dan+doa+restunya.&location=${location}`;
+  };
+
+  const toggleAutoScroll = () => {
+    if (isAutoScrolling) {
+      if (autoScrollRef.current) clearInterval(autoScrollRef.current);
+      autoScrollRef.current = null;
+      setIsAutoScrolling(false);
+    } else {
+      autoScrollRef.current = setInterval(() => {
+        window.scrollBy({ top: 2, behavior: "instant" });
+      }, 16);
+      setIsAutoScrolling(true);
+    }
+  };
+
   const toggleMute = () => {
     if (!audioRef.current) return;
     const next = !isMuted;
@@ -178,17 +212,26 @@ Ucapan: ${data.wishes || "-"}`;
       {/* Background audio */}
       <audio ref={audioRef} src={kontenUndangan.audioUrl} loop muted />
 
-      {/* Floating music toggle */}
-      <button
-        onClick={toggleMute}
-        aria-label={isMuted ? "Unmute music" : "Mute music"}
-        className={`fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-primary text-primary-foreground shadow-lg flex items-center justify-center transition-opacity duration-300 ${isMuted ? "opacity-40" : "opacity-100"}`}
-      >
-        {isMuted ? <Music2 className="w-5 h-5" /> : <Music className="w-5 h-5" />}
-      </button>
+      {/* Floating Action Buttons */}
+      <div className="fixed bottom-24 right-4 z-50 flex flex-col gap-3">
+        <button
+          onClick={toggleAutoScroll}
+          aria-label={isAutoScrolling ? "Stop auto-scroll" : "Start auto-scroll"}
+          className={`w-12 h-12 rounded-full bg-primary text-primary-foreground shadow-lg flex items-center justify-center transition-opacity duration-300 ${isAutoScrolling ? "opacity-100" : "opacity-40"}`}
+        >
+          {isAutoScrolling ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+        </button>
+        <button
+          onClick={toggleMute}
+          aria-label={isMuted ? "Unmute music" : "Mute music"}
+          className={`w-12 h-12 rounded-full bg-primary text-primary-foreground shadow-lg flex items-center justify-center transition-opacity duration-300 ${isMuted ? "opacity-40" : "opacity-100"}`}
+        >
+          {isMuted ? <VolumeX className="w-5 h-5" /> : <Music className="w-5 h-5" />}
+        </button>
+      </div>
 
       {/* 1. Cover / Hero Section */}
-      <section className="relative min-h-[100dvh] flex flex-col items-center justify-center p-6 text-center border-b-8 border-primary/10">
+      <section id="hero" className="relative min-h-[100dvh] flex flex-col items-center justify-center p-6 text-center border-b-8 border-primary/10">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent"></div>
         </div>
@@ -302,7 +345,7 @@ Ucapan: ${data.wishes || "-"}`;
             </section>
 
             {/* 3. Detail Acara & Lokasi */}
-            <section className="py-24 px-6 bg-card/50 border-y border-primary/10">
+            <section id="acara" className="py-24 px-6 bg-card/50 border-y border-primary/10">
               <motion.div
                 initial="hidden"
                 whileInView="visible"
@@ -320,7 +363,7 @@ Ucapan: ${data.wishes || "-"}`;
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
                   <div className="bg-background p-8 rounded-3xl shadow-lg border border-primary/5 text-center flex flex-col items-center">
                     <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary mb-4">
-                      <Heart className="w-5 h-5" />
+                      <Icon iconNode={gemRing} className="w-5 h-5" />
                     </div>
                     <h3 className="font-serif text-2xl mb-4 text-foreground">Akad Nikah</h3>
                     <div className="space-y-3 text-muted-foreground">
@@ -383,7 +426,7 @@ Ucapan: ${data.wishes || "-"}`;
                     <Button
                       variant="outline"
                       className="border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-full px-6"
-                      onClick={() => window.open(kontenUndangan.calendarLink, "_blank")}
+                      onClick={() => window.open(generateCalendarLink(), "_blank")}
                     >
                       <Calendar className="w-4 h-4 mr-2" /> Simpan Tanggal
                     </Button>
@@ -393,7 +436,7 @@ Ucapan: ${data.wishes || "-"}`;
             </section>
 
             {/* 4. Galeri Foto */}
-            <section className="py-24 px-6 relative overflow-hidden">
+            <section id="galeri" className="py-24 px-6 relative overflow-hidden">
               <motion.div
                 initial="hidden"
                 whileInView="visible"
@@ -428,7 +471,7 @@ Ucapan: ${data.wishes || "-"}`;
             </section>
 
             {/* 5. RSVP Form */}
-            <section className="py-24 px-6 bg-card/50 border-t border-primary/10">
+            <section id="rsvp" className="py-24 px-6 bg-card/50 border-t border-primary/10">
               <motion.div
                 initial="hidden"
                 whileInView="visible"
@@ -535,7 +578,7 @@ Ucapan: ${data.wishes || "-"}`;
             </section>
 
             {/* 6. Digital Gift */}
-            <section className="py-24 px-6 bg-card/50 border-t border-primary/10">
+            <section id="gift-section" className="py-24 px-6 bg-card/50 border-t border-primary/10">
               <motion.div
                 initial="hidden"
                 whileInView="visible"
@@ -593,6 +636,40 @@ Ucapan: ${data.wishes || "-"}`;
               </p>
             </footer>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Bottom Navbar — only after invitation is opened */}
+      <AnimatePresence>
+        {isOpened && (
+          <motion.nav
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 24 }}
+            transition={{ duration: 0.4, delay: 0.3 }}
+            className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50"
+          >
+            <div className="flex items-center gap-2 bg-stone-900 rounded-full px-3 py-2.5 shadow-2xl">
+              {(
+                [
+                  { NavIcon: Home,         id: "hero"         },
+                  { NavIcon: Users,        id: "mempelai"     },
+                  { NavIcon: CalendarHeart,id: "acara"        },
+                  { NavIcon: Images,       id: "galeri"       },
+                  { NavIcon: NotebookPen,  id: "rsvp"         },
+                  { NavIcon: CreditCard,   id: "gift-section" },
+                ] as const
+              ).map(({ NavIcon, id }) => (
+                <button
+                  key={id}
+                  onClick={() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" })}
+                  className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-stone-800 hover:bg-primary hover:text-white transition-colors duration-200"
+                >
+                  <NavIcon className="w-4 h-4" />
+                </button>
+              ))}
+            </div>
+          </motion.nav>
         )}
       </AnimatePresence>
     </div>
